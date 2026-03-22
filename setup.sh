@@ -240,6 +240,7 @@ eval "$(fnm env --use-on-cd --shell bash)"
 info "Installing Node LTS..."
 fnm install --lts
 fnm default lts-latest
+fnm use lts-latest
 success "Node LTS installed and set as default"
 
 # ─── Step 8: Config Files ───────────────────────────────────────────
