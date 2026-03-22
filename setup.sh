@@ -202,6 +202,14 @@ fish -c '
 ' 2>/dev/null
 success "Fisher + nvm.fish installed"
 
+# Install latest LTS Node and set as default
+info "Installing Node LTS via nvm and setting as default..."
+fish -c '
+    nvm install lts
+    set --universal nvm_default_version (nvm current)
+' 2>/dev/null
+success "Node LTS installed and set as default (auto-activates on shell start)"
+
 # fish_plugins file
 cp "$CONFIGS_DIR/fish_plugins" "$FISH_CONFIG_DIR/fish_plugins"
 success "Fish plugins list deployed"
