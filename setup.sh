@@ -537,75 +537,63 @@ install_cli_tools_linux() {
         success "fd symlink created"
     fi
 
-    # eza — may not be in apt on older distros, install from binary
+    # Helper: install bundled binary from bin/linux-x86_64/
+    install_bundled_bin() {
+        local name="$1"
+        if [[ -f "$SCRIPT_DIR/bin/linux-x86_64/$name" ]]; then
+            run_cmd sudo cp "$SCRIPT_DIR/bin/linux-x86_64/$name" "/usr/local/bin/$name"
+            run_cmd sudo chmod +x "/usr/local/bin/$name"
+            success "$name installed from bundled binary"
+            return 0
+        fi
+        return 1
+    }
+
+    # eza — try apt first, then bundled binary
     if has_cmd eza; then
         success "eza already installed"
     else
         info "Installing eza..."
-        if ! run_cmd sudo apt-get install -y eza 2>/dev/null; then
-            info "eza not in apt, installing from GitHub release..."
-            local EZA_URL
-            EZA_URL="$(curl -fsSL https://api.github.com/repos/eza-community/eza/releases/latest \
-                | grep 'browser_download_url.*eza_x86_64-unknown-linux-gnu.tar.gz' \
-                | head -1 | cut -d'"' -f4)"
-            if [[ -n "$EZA_URL" ]]; then
-                curl -fsSL "$EZA_URL" | tar xz -C /tmp
-                run_cmd sudo mv /tmp/eza /usr/local/bin/eza
-                success "eza installed from release"
-            else
-                warn "Could not install eza — skipping"
-            fi
+        if run_cmd sudo apt-get install -y eza 2>/dev/null; then
+            success "eza installed via apt"
         else
-            success "eza installed"
+            install_bundled_bin eza || warn "Could not install eza — skipping"
         fi
     fi
 
-    # tldr — install via npm (tldr-pages) or pip; apt version may be outdated
+    # tldr (tealdeer) — try apt first, then bundled binary
     if has_cmd tldr; then
         success "tldr already installed"
     else
         info "Installing tldr..."
-        run_cmd sudo apt-get install -y tldr 2>/dev/null || {
-            warn "tldr not available via apt, will install via npm later"
-        }
-    fi
-
-    # git-delta — not in standard apt repos, install from GitHub
-    if has_cmd delta; then
-        success "git-delta already installed"
-    else
-        info "Installing git-delta from GitHub release..."
-        local DELTA_URL
-        DELTA_URL="$(curl -fsSL https://api.github.com/repos/dandavison/delta/releases/latest \
-            | grep 'browser_download_url.*delta.*amd64.deb' \
-            | head -1 | cut -d'"' -f4)"
-        if [[ -n "$DELTA_URL" ]]; then
-            local DELTA_TMP
-            DELTA_TMP="$(mktemp /tmp/delta-XXXXXX.deb)"
-            run_cmd curl -fsSL "$DELTA_URL" -o "$DELTA_TMP"
-            run_cmd sudo dpkg -i "$DELTA_TMP"
-            rm -f "$DELTA_TMP"
-            success "git-delta installed"
+        if run_cmd sudo apt-get install -y tealdeer 2>/dev/null; then
+            success "tldr installed via apt"
         else
-            warn "Could not install git-delta — skipping"
+            install_bundled_bin tldr || warn "Could not install tldr — skipping"
         fi
     fi
 
-    # lazygit — not in standard apt repos, install from GitHub
+    # git-delta — try apt first, then bundled binary
+    if has_cmd delta; then
+        success "git-delta already installed"
+    else
+        info "Installing git-delta..."
+        if run_cmd sudo apt-get install -y git-delta 2>/dev/null; then
+            success "git-delta installed via apt"
+        else
+            install_bundled_bin delta || warn "Could not install git-delta — skipping"
+        fi
+    fi
+
+    # lazygit — try apt first, then bundled binary
     if has_cmd lazygit; then
         success "lazygit already installed"
     else
-        info "Installing lazygit from GitHub release..."
-        local LAZYGIT_VERSION
-        LAZYGIT_VERSION="$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest \
-            | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')"
-        if [[ -n "$LAZYGIT_VERSION" ]]; then
-            local LAZYGIT_URL="https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-            curl -fsSL "$LAZYGIT_URL" | tar xz -C /tmp lazygit
-            run_cmd sudo mv /tmp/lazygit /usr/local/bin/lazygit
-            success "lazygit installed"
+        info "Installing lazygit..."
+        if run_cmd sudo apt-get install -y lazygit 2>/dev/null; then
+            success "lazygit installed via apt"
         else
-            warn "Could not install lazygit — skipping"
+            install_bundled_bin lazygit || warn "Could not install lazygit — skipping"
         fi
     fi
 
