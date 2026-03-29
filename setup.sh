@@ -194,7 +194,7 @@ has_cmd() {
 # ─── Step 1: Package Manager ────────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
-echo -e "${BOLD}  📦 Step 1/8: Package Manager${NC}"
+echo -e "${BOLD}  📦 Step 1/9: Package Manager${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
 case "$OS" in
@@ -224,7 +224,7 @@ esac
 # ─── Step 2: Terminal Emulator ───────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
-echo -e "${BOLD}  👻 Step 2/8: Terminal Emulator${NC}"
+echo -e "${BOLD}  👻 Step 2/9: Terminal Emulator${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
 case "$OS" in
@@ -262,7 +262,7 @@ esac
 # ─── Step 3: Nerd Font (MesloLGS NF) ────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
-echo -e "${BOLD}  🔤 Step 3/8: Nerd Font (MesloLGS NF)${NC}"
+echo -e "${BOLD}  🔤 Step 3/9: Nerd Font (MesloLGS NF)${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
 # Determine font directory based on OS
@@ -316,9 +316,9 @@ fi
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 if [[ "$SHELL_CHOICE" == "fish" ]]; then
-    echo -e "${BOLD}  🐟 Step 4/8: Fish Shell${NC}"
+    echo -e "${BOLD}  🐟 Step 4/9: Fish Shell${NC}"
 else
-    echo -e "${BOLD}  🐚 Step 4/8: Zsh + Fish-like Plugins${NC}"
+    echo -e "${BOLD}  🐚 Step 4/9: Zsh + Fish-like Plugins${NC}"
 fi
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
@@ -459,7 +459,7 @@ esac
 # ─── Step 5: CLI Tools ──────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
-echo -e "${BOLD}  🛠  Step 5/8: CLI Tools${NC}"
+echo -e "${BOLD}  🛠  Step 5/9: CLI Tools${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
 install_cli_tools_macos() {
@@ -611,7 +611,7 @@ esac
 # ─── Step 6: Starship Prompt ────────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
-echo -e "${BOLD}  🚀 Step 6/8: Starship Prompt${NC}"
+echo -e "${BOLD}  🚀 Step 6/9: Starship Prompt${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
 if has_cmd starship; then
@@ -638,7 +638,7 @@ fi
 # ─── Step 7: fnm + Node.js (optional) ───────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
-echo -e "${BOLD}  🟢 Step 7/8: fnm + Node.js (optional)${NC}"
+echo -e "${BOLD}  🟢 Step 7/9: fnm + Node.js (optional)${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
 if has_cmd fnm; then
@@ -686,10 +686,46 @@ else
     fi
 fi
 
-# ─── Step 8: Config Files ───────────────────────────────────────────
+# ─── Step 8: Zellij (optional) ──────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
-echo -e "${BOLD}  📦 Step 8/8: Deploying Configs${NC}"
+echo -e "${BOLD}  🪟 Step 8/9: Zellij (optional)${NC}"
+echo -e "${BOLD}══════════════════════════════════════════${NC}"
+
+if has_cmd zellij; then
+    success "Zellij already installed"
+else
+    echo ""
+    echo -e "  Zellij is a modern terminal multiplexer (like tmux, but better UX)."
+    printf "  Install Zellij? (y/N): "
+    read -r INSTALL_ZELLIJ
+    if [[ "$INSTALL_ZELLIJ" =~ ^[Yy]$ ]]; then
+        case "$OS" in
+            macos)
+                info "Installing Zellij..."
+                run_cmd brew install zellij
+                ;;
+            debian|wsl)
+                info "Installing Zellij..."
+                if [[ -f "$SCRIPT_DIR/bin/linux-x86_64/zellij" ]]; then
+                    run_cmd sudo cp "$SCRIPT_DIR/bin/linux-x86_64/zellij" /usr/local/bin/zellij
+                    run_cmd sudo chmod +x /usr/local/bin/zellij
+                else
+                    # Use official installer
+                    run_cmd bash <(curl -L https://zellij.dev/launch)
+                fi
+                ;;
+        esac
+        success "Zellij installed"
+    else
+        info "Skipping Zellij"
+    fi
+fi
+
+# ─── Step 9: Config Files ───────────────────────────────────────────
+echo ""
+echo -e "${BOLD}══════════════════════════════════════════${NC}"
+echo -e "${BOLD}  📦 Step 9/9: Deploying Configs${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
 # --- Ghostty config ---
@@ -899,6 +935,9 @@ echo -e "    📊 btop                 — system monitor"
 echo -e "    🔀 lazygit + delta      — git tools"
 echo -e "    📁 zoxide               — smart cd"
 echo -e "    🔍 fzf                  — fuzzy finder"
+if has_cmd zellij; then
+    echo -e "    🪟 zellij               — terminal multiplexer"
+fi
 echo ""
 echo -e "  ${YELLOW}Next steps:${NC}"
 echo -e "    1. Restart your terminal (or open ${BOLD}Ghostty${NC})"

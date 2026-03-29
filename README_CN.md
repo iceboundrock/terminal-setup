@@ -104,6 +104,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/mai
 | **[delta](https://github.com/dandavison/delta)** | 带语法高亮的 git diff |
 | **[lazygit](https://github.com/jesseduffield/lazygit)** | Git 终端 UI |
 | **[fnm](https://github.com/Schniz/fnm)** | 快速 Node 版本管理器（Rust 编写） |
+| **[Zellij](https://zellij.dev)** | 现代终端复用器（可选） |
 
 ## 脚本做了什么
 
@@ -113,8 +114,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/mai
 4. 安装你选择的 **Shell** + 插件
 5. 安装所有 **CLI 工具**（macOS 用 Homebrew，Linux 用 apt + GitHub releases）
 6. 安装 **Starship** 提示符 + Catppuccin Mocha 配置
-7. 安装 **fnm** + **Node.js** LTS
-8. 部署所有配置文件（已有配置会加时间戳备份）
+7. 安装 **fnm** + **Node.js** LTS（可选）
+8. 安装 **Zellij** 终端复用器（可选）
+9. 部署所有配置文件（已有配置会加时间戳备份）
 
 ## 平台说明
 

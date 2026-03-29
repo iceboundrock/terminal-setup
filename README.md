@@ -104,6 +104,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/mai
 | **[delta](https://github.com/dandavison/delta)** | Beautiful git diffs with syntax highlighting |
 | **[lazygit](https://github.com/jesseduffield/lazygit)** | Git TUI |
 | **[fnm](https://github.com/Schniz/fnm)** | Fast Node Manager (Rust) |
+| **[Zellij](https://zellij.dev)** | Modern terminal multiplexer (optional) |
 
 ## What It Does
 
@@ -113,8 +114,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/mai
 4. Installs your **shell** of choice + plugins
 5. Installs all **CLI tools** (Homebrew on macOS, apt + GitHub releases on Linux)
 6. Installs **Starship** prompt with Catppuccin Mocha config
-7. Installs **fnm** + **Node.js** LTS
-8. Deploys all config files (existing configs are backed up with timestamps)
+7. Installs **fnm** + **Node.js** LTS (optional)
+8. Installs **Zellij** terminal multiplexer (optional)
+9. Deploys all config files (existing configs are backed up with timestamps)
 
 ## Platform Notes
 
