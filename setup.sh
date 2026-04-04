@@ -712,7 +712,11 @@ else
                     run_cmd sudo chmod +x /usr/local/bin/zellij
                 else
                     # Use official installer
-                    run_cmd bash <(curl -L https://zellij.dev/launch)
+                    if $DRY_RUN; then
+                        echo -e "${YELLOW}[DRY-RUN]${NC} curl -L https://zellij.dev/launch | bash"
+                    else
+                        curl -L https://zellij.dev/launch | bash
+                    fi
                 fi
                 ;;
         esac
